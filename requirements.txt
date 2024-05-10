@@ -1,0 +1,6 @@
+regex~=2023.10.3
+yarl~=1.9.2
+requests~=2.31.0
+uvicorn~=0.25.0
+fastapi~=0.109.1
+beautifulsoup4~=4.12.2
