@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Gogo Usage Documentation</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #333;
+            color: #eee;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1, h2, h3 {
+            color: #00bcd4;
+        }
+
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            background-color: #444;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            margin-top: 20px;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        a {
+            text-decoration: none;
+            color: #4caf50;
+        }
+
+        a:hover {
+            color: #8bc34a;
+        }
+
+        p {
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .code-block, .response-block, .heading-block {
+            background-color: #222;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Gogo Usage Documentation</h1>
+    <div id="docs" class="container">
+        <div class="heading-block">
+            <h2>Usage</h2>
+        </div>
+        <div class="heading-block">
+            <div>Use the following endpoints to access the Gogo API.</div>
+        </div>
+        <div class="heading-block">
+            <ul>
+                <li><a href="#docs">/api/gogo/docs</a> - This page</li>
+                <li><a href="#home">/api/gogo/home</a> - Get Recent </li>
+                <li><a href="#search">/api/gogo/search/</a> - Search gogo for the term </li>
+                <li><a href="#details">/api/gogo/details/</a> - Returns details for the slug in the url</li>
+                <li><a href="#seasons">/api/gogo/seasons/</a> - Gives {"seasons":[["not available","season_id"]]} as response</li>
+                <li><a href="#episodes">/api/gogo/episodes/</a> - Fetches the episodes for the specified season_id</li>
+                <li><a href="#source">/api/gogo/source/</a> - Fetches the m3u8 for the requested episode</li>
+                <li><a href="#trending">/api/gogo/trending/</a> - Returns the popular animes across specified timeline/ across wekk when not specfied</li>
+                <li><a href="#popular">/api/gogo/popular/</a> - This route returns the popular animes in similar format as home but with more data</li>
+                <li><a href="#tv">/api/gogo/tv/</a> - Returns newly added tv series to the site</li>
+                <li><a href="#movie">/api/gogo/movie/</a> - Returns newly added movies to the site</li>
+            </ul>
+        </div>
+    </div>
+    <div id="home" class="container">
+        <div class="heading-block">
+            <h2>Home</h2>
+        </div>
+        <div class="heading-block">
+            <div>Get the recent episodes</div>
+        </div>
+        <div class="heading-block">
+            <div>Endpoint: /api/gogo/home</div>
+        </div>
+        <div class="heading-block">
+            <div>Method: GET</div>
+        </div>
+        <div class="heading-block">
+            <div>Parameters:</div>
+            <ul>
+                <li>None</li>
+            </ul>
+        </div>
+        <div class="heading-block">
+            <div>
+                Example:<br>
+                <div class="code-block">
+                    GET: /api/gogo/home
+                </div>
+                <div class="response-block">
+                    Response: {"Latest Subbed":[{"image":"image url","url":"slug","title":"name of anime","type":"SUB","rating":"?"},{...}...],"Latest Dubbed":[...],"Latest Chinese":[...]}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="search" class="container">
+        <div class="heading-block">
+            <h2>Search</h2>
+        </div>
+        <div class="heading-block">
+            <div>Search gogo for the term</div>
+        </div>
+        <div class="heading-block">
+            <div>Endpoint: /api/gogo/search/{term}</div>
+        </div>
+        <div class="heading-block">
+            <div>Method: GET</div>
+        </div>
+        <div class="heading-block">
+            <div>Parameters:</div>
+            <ul>
+                <li>term -> The term to search for</li>
+            </ul>
+        </div>
+        <div class="heading-block">
+            <div>
+                Example:<br>
+                <div class="code-block">
+                    GET: /api/gogo/search/one%20piece
+                </div>
+                <div class="response-block">
+                    Response: {"Search Results Subbed":[{"image":"image url","url":"slug","title":"name of anime","type":"SUB","rating":"?"},{...}...],"Search Results Dubbed":[{...},...]}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="details" class="container">
+        <div class="heading-block">
+            <h2>Details</h2>
+        </div>
+        <div class="heading-block">
+            <div>Get details for the slug in the url</div>
+        </div>
+        <div class="heading-block">
+            <div>Endpoint: /api/gogo/details/{slug}</div>
+        </div>
+        <div class="heading-block">
+            <div>Method: GET</div>
+        </div>
+        <div class="heading-block">
+            <div>Parameters:</div>
+            <ul>
+                <li>slug -> The slug to get details for</li>
+            </ul>
+        </div>
+        <div class="heading-block">
+            <div>
+                Example:<br>
+                <div class="code-block">
+                    GET: /api/gogo/details/category/one-piece
+                </div>
+                <div class="response-block">
+                    Response: {"title":"One Piece","image":"image","released":"TV Series","description":"details","genre":[["https://gogoanimehd.io/genre/action","Action"],[...]...]year":"1999","time_seasons":"Ongoing"}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="seasons" class="container">
+        <div class="heading-block">
+            <h2>Seasons</h2>
+        </div>
+        <div class="heading-block">
+            <div>Get the seasons for the slug in the url</div>
+        </div>
+        <div class="heading-block">
+            <div>Endpoint: /api/gogo/seasons/{slug}</div>
+        </div>
+        <div class="heading-block">
+            <div>Method: GET</div>
+        </div>
+        <div class="heading-block">
+            <div>Parameters:</div>
+            <ul>
+                <li>slug -> The slug to get seasons for</li>
+            </ul>
+        </div>
+        <div class="heading-block">
+            <div id="seasons_example">
+                Example:<br>
+                <div class="code-block">
+                    GET: /api/gogo/seasons/one-piece
+                </div>
+                <div class="response-block">
+                    Response: {"seasons":[["not available","171"]]}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="episodes" class="container">
+        <div class="heading-block">
+            <h2>Episodes</h2>
+        </div>
+        <div class="heading-block">
+            <div>Get the episodes for the slug in the url</div>
+        </div>
+        <div class="heading-block">
+            <div>Endpoint: /api/gogo/episodes/{slug}/{season_id}</div>
+        </div>
+        <div class="heading-block">
+            <div>Method: GET</div>
+        </div>
+        <div class="heading-block">
+            <div>Parameters:</div>
+            <ul>
+                <li>slug -> The slug to get episodes for</li>
+                <li>season_id -> The season_id to get episodes for</li>
+            </ul>
+        </div>
+        <div class="heading-block">
+            <div id="episodes_example">
+                Example:
+                <div class="code-block">
+                    season_id = 171 (from <a href="#seasons_example">above</a> example)
+                </div>
+                <div class="code-block">
+                    GET: /api/gogo/episodes/one-piece/171
+                </div>
+                <div class="response-block">
+                    Response: [["one-piece-episode-1083","Episode 1083"],["one-piece-episode-1082","Episode 1082"],[...]...]
+                </div>
+                <div class="response-block">
+                    Explanation of response: [["slug","title"],["slug","title"],[...]...]
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="source" class="container">
+        <div class="heading-block">
+            <h2>Sources</h2>
+        </div>
+        <div class="heading-block">
+            <div>Get the sources for the slug in the url</div>
+        </div>
+        <div class="heading-block">
+            <div>Endpoint: /api/gogo/source/{slug}/{episode_slug}</div>
+        </div>
+        <div class="heading-block">
+            <div>Method: GET</div>
+        </div>
+        <div class="heading-block">
+            <div>Parameters:</div>
+            <ul>
+                <li>slug -> The slug to get sources for</li>
+                <li>episode_slug -> The episode_slug to get sources for</li>
+            </ul>
+        </div>
+        <div class="heading-block">
+            <div>
+                Example:<br>
+                <div class="code-block">
+                    episode_slug = one-piece-episode-1083 (from <a href="#episodes_example">above</a> example)
+                </div>
+                <div class="code-block">
+                    GET: /api/gogo/source/one-piece/one-piece-episode-1083
+                </div>
+                <div class="response-block">
+                    Response: {"source":"main_m3u8_file","alt_src":"alternative_m3u8_file","thumbnails":[],"subs":[],"unknown":[],"title":"{anime name} {episode title}"}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="trending" class="container">
+        <div class="heading-block">
+            <h2>Trending</h2>
+        </div>
+        <div class="heading-block">
+            <div>Get the trending animes</div>
+        </div>
+        <div class="heading-block">
+            <div>Endpoint: /api/gogo/trending?timeline=[week,month,all][default:week]</div>
+
+        </div>
+        <div class="heading-block">
+            <div>Method: GET</div>
+        </div>
+        <div class="heading-block">
+            <div>Parameters:</div>
+            <ul>
+                <li>timeline -> The timeline for which we need to get trending possible values = [month, week, all]</li>
+            </ul>
+        </div>
+        <div class="heading-block">
+            <div>
+                Example:<br>
+                <div class="code-block">
+                    GET: /api/gogo/trending?timeline=month
+                </div>
+                <div class="response-block">
+                    Response: [{"title": "...", "url": "...", "released_ep_count": "..."}...]
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="popular" class="container">
+        <div class="heading-block">
+            <h2>Popular</h2>
+        </div>
+        <div class="heading-block">
+            <div>Get the popular animes</div>
+        </div>
+        <div class="heading-block">
+            <div>Endpoint: /api/gogo/popular?page=[int][default=1]</div>
+        </div>
+        <div class="heading-block">
+            <div>Method: GET</div>
+        </div>
+        <div class="heading-block">
+            <div>Parameters:</div>
+            <ul>
+                <li>page -> get older data by increasing page number</li>
+            </ul>
+        </div>
+        <div class="heading-block">
+            <div>
+                Example:<br>
+                <div class="code-block">
+                    GET: /api/gogo/popular
+                </div>
+                <div class="response-block">
+                    Response: [{"title": "...", "url": "...", "image": "...", "genres": [["url", "genre_name"]...]}...]
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="movie" class="container">
+        <div class="heading-block">
+            <h2>Movie</h2>
+        </div>
+        <div class="heading-block">
+            <div>Get the latest anime movies added</div>
+        </div>
+        <div class="heading-block">
+            <div>Endpoint: /api/gogo/movie</div>
+        </div>
+        <div class="heading-block">
+            <div>Method: GET</div>
+        </div>
+<!--        <div class="heading-block">-->
+<!--            <div>Parameters:</div>-->
+<!--            <ul>-->
+<!--                <li>page -> get older data by increasing page number</li>-->
+<!--            </ul>-->
+<!--        </div>-->
+        <div class="heading-block">
+            <div>
+                Example:<br>
+                <div class="code-block">
+                    GET: /api/gogo/movie
+                </div>
+                <div class="response-block">
+                    Response: {"Newly Added Movies":[{"image":"image url","url":"slug","title":"name of anime","type":"SUB","rating":"?"},...]}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="tv" class="container">
+        <div class="heading-block">
+            <h2>Tv</h2>
+        </div>
+        <div class="heading-block">
+            <div>Get the latest anime movies added</div>
+        </div>
+        <div class="heading-block">
+            <div>Endpoint: /api/gogo/tv</div>
+        </div>
+        <div class="heading-block">
+            <div>Method: GET</div>
+        </div>
+<!--        <div class="heading-block">-->
+<!--            <div>Parameters:</div>-->
+<!--            <ul>-->
+<!--                <li>page -> get older data by increasing page number</li>-->
+<!--            </ul>-->
+<!--        </div>-->
+        <div class="heading-block">
+            <div>
+                Example:<br>
+                <div class="code-block">
+                    GET: /api/gogo/tv
+                </div>
+                <div class="response-block">
+                    Response: {"Newly Added Tv":[{"image":"image url","url":"slug","title":"name of anime","type":"SUB","rating":"?"},...]}
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
