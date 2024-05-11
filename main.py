@@ -702,6 +702,8 @@ class Gogo:
             for title in anilist_title:
                 if result['title'] == "Bleach" and result['released_year'] == "2012":
                     result['released_year'] = "2004"
+                if title == "Boku no Hero Academia 7":
+                    title="Boku no Hero Academia 7th Season"
                 result['title'] = result['title'].replace("-", "").lower().replace(" (dub)", "")
                 title = title.replace("-", "").lower()
                 if result['title'] == title and str(result['released_year']) == str(anilist_data['seasonYear']):
