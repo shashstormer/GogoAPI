@@ -725,7 +725,7 @@ def add_gogo(_app: FastAPI):
             dub: str = "false"
     ):
         gogo.req_processed_no += 1
-        if gogo.req_processed_no % 5 == 0:
+        if gogo.req_processed_no % 10 == 0:
             return RedirectResponse("https://github.com/shashstormer/GogoAPI/")
         if method_call.startswith("_"):
             return
