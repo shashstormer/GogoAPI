@@ -719,7 +719,7 @@ def add_gogo(_app: FastAPI):
     @_app.get("/api/gogo/{method_call}/{method_value:path}")
     @limiter.limit("50/minute")
     async def gogoAni(
-            method_call: str, method_value: str, request_accessor: Request, season: str or None = None,
+            method_call: str, method_value: str, request: Request, season: str or None = None,
             episode: str or None = None,
             content_type: str or None = None, redirected_code: str or None = None, page=None, timeline=None,
             dub: str = "false"
@@ -734,7 +734,7 @@ def add_gogo(_app: FastAPI):
             try:
                 to_return = fn_to_call(
                     method_value=method_value, season=season, episode=episode, content_type=content_type,
-                    redirected_code=redirected_code, page=page, timeline=timeline, request_accessor=request_accessor,
+                    redirected_code=redirected_code, page=page, timeline=timeline, request_accessor=request,
                     dub=dub,
                 )
             except Exception as e:
