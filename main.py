@@ -19,6 +19,8 @@ from Crypto.Cipher import AES
 from Crypto.Util.Padding import pad, unpad
 import base64
 import uvicorn
+from slowapi.errors import RateLimitExceeded
+from slowapi import Limiter, _rate_limit_exceeded_handler
 
 
 def html(string):
@@ -311,6 +313,7 @@ class Gogo:
     def __init__(self):
         super().__init__()
         self.session = Session()
+        self.req_processed_no = 0
         self.cache = Cache(minutes=60 if os.getenv("server_env") == "dev" else 30, session=self.session)
         sn = random.randint(1, 59)
         self.long_cache = Cache(hours=3, minutes=sn, session=self.session)
@@ -714,12 +717,16 @@ gogo = Gogo()
 
 def add_gogo(_app: FastAPI):
     @_app.get("/api/gogo/{method_call}/{method_value:path}")
+    @limiter.limit("50/minute")
     async def gogoAni(
             method_call: str, method_value: str, request_accessor: Request, season: str or None = None,
             episode: str or None = None,
             content_type: str or None = None, redirected_code: str or None = None, page=None, timeline=None,
             dub: str = "false"
     ):
+        gogo.req_processed_no += 1
+        if gogo.req_processed_no % 2 != 0:
+            return RedirectResponse("https://github.com/shashstormer/GogoAPI/")
         if method_call.startswith("_"):
             return
         try:
@@ -739,7 +746,18 @@ def add_gogo(_app: FastAPI):
             return JSONResponse({"error": e}, status_code=403)
 
 
+def get_remote_address(request: Request):
+    if not request.client or not request.client.host:
+        return "127.0.0.1"
+    if request.headers.get("CF-Connecting-IP"):
+        return request.headers.get("CF-Connecting-IP")
+    return request.client.host
+
+
+limiter = Limiter(key_func=get_remote_address)
 app = FastAPI()
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 add_gogo(app)
 
