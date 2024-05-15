@@ -703,12 +703,14 @@ class Gogo:
         for result in search_results[f'Search Results {"D" if dub else "S"}ubbed']:
             result: Any = result
             for title in anilist_title:
+                
                 if result['title'] == "Bleach" and result['released_year'] == "2012":
                     result['released_year'] = "2004"
                 if title == "Boku no Hero Academia 7":
                     title="Boku no Hero Academia 7th Season"
                 result['title'] = result['title'].replace("-", "").lower().replace(" (dub)", "")
-                title = title.replace("-", "").lower()
+                title = title.replace("-", "").lower().replace("season","")
+                result['title'] = result['title'].replace("season","")
                 if result['title'] == title and str(result['released_year']) == str(anilist_data['seasonYear']):
                     return {"slug": result['url']}
         return {"slug": False}
