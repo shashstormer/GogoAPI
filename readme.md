@@ -6,6 +6,12 @@ run
 pip install -r requirements.txt
 python main.py
 ```
+
+For development
+```bash
+uvicorn main:app --reload --host 0.0.0.0 --port 5010
+```
+
 the gogo api will be running on http://127.0.0.1:5010
 
 ## Deploy on vercel
