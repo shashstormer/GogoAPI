@@ -293,7 +293,7 @@ class Session:
         return resp
 
 
-main_url = "https://anitaku.to"
+main_url = "https://anitaku.so"
 alternate_domains = ["https://gogoanime3.net/", "https://www9.gogoanimes.fi", ]
 recent_url = "https://ajax.gogocdn.net/ajax/page-recent-release.html?page={}&type={}"
 episodes_url = "https://ajax.gogocdn.net/ajax/load-list-episode?ep_start=0&ep_end=10000&id={}"
@@ -667,17 +667,13 @@ class Gogo:
             url = 'https://graphql.anilist.co'
             query = f'''
                 query {{
-                    Page(perPage: 1) {{
-                        media(id:{anilist_id}) {{
+                        Media(id:{anilist_id}) {{
                             seasonYear
                             title{{
                                 english
                                 romaji
                             }}
-                            idMal
-                            season
                         }}
-                    }}
                 }}
             '''
 
@@ -685,7 +681,7 @@ class Gogo:
             response = load(self.session.get(url, post=True, body=data))
             return response
 
-        anilist_data: Any = fetch_anilist_data(method_value)["data"]["Page"]["media"][0]
+        anilist_data: Any = fetch_anilist_data(method_value)["data"]["Media"]
         anilist_title = [anilist_data['title']['romaji'], anilist_data['title']['english']]
         for x in [None, 'None']:
             if x in anilist_title:
@@ -694,23 +690,23 @@ class Gogo:
             anilist_title *= 2
         search_results = self.search(anilist_title[0])
         if anilist_title[0] != anilist_title[1]:
-            search_results2 = self.search(anilist_title[1])
-            if f'Search Results {"D" if dub else "S"}ubbed' in search_results:
-                search_results[f'Search Results {"D" if dub else "S"}ubbed'].extend(
-                    search_results2[f'Search Results {"D" if dub else "S"}ubbed'])
-            else:
-                search_results = search_results2
+            try:
+                if f'Search Results {"D" if dub else "S"}ubbed' in search_results:
+                    search_results[f'Search Results {"D" if dub else "S"}ubbed'].extend(
+                        search_results2[f'Search Results {"D" if dub else "S"}ubbed'])
+                else:
+                    search_results = search_results2
+            except: 
+                pass
+           
         for result in search_results[f'Search Results {"D" if dub else "S"}ubbed']:
             result: Any = result
+            print(result)
             for title in anilist_title:
                 
                 if result['title'] == "Bleach" and result['released_year'] == "2012":
                     result['released_year'] = "2004"
 
-               # result['title'] = result['title'].replace("-", "").lower().replace(" (dub)", "")
-               # title = title.replace("-", "").lower().replace("season ","").replace("season","")
-               # result['title'] =re.sub(r'\b(season|[0-9]+(?:st|nd|rd|th))\b', '', title, flags=re.IGNORECASE).strip()
-               #if str(result['released_year']) == str(anilist_data['seasonYear']) and result['title'] == title :
                 if str(result['released_year']) == str(anilist_data['seasonYear'])  :
                     return {"slug": result['url']}
         return {"slug": False}
