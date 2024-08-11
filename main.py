@@ -452,7 +452,7 @@ class Gogo:
         if new:
             x = html(dt)
             url = [i['data-video'] for i in x.find_all(class_="anime_muti_link")[0].find_all("a") if
-                   "streaming.php" in i['data-video']][0]
+                   "embedplus" in i['data-video']][0]
             parsed_url = yarl.URL(url)
             content_id = parsed_url.query["id"]
             next_host = "https://{}/".format(parsed_url.host)
