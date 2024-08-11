@@ -682,13 +682,14 @@ class Gogo:
             return response
 
         anilist_data: Any = fetch_anilist_data(method_value)["data"]["Media"]
-        anilist_title = [anilist_data['title']['romaji'], anilist_data['title']['english']]
+        anilist_title = [anilist_data['title']['english'], anilist_data['title']['romaji']]
         for x in [None, 'None']:
             if x in anilist_title:
                 anilist_title.remove(x)
         if len(anilist_title) == 1:
             anilist_title *= 2
         search_results = self.search(anilist_title[0])
+        search_results2  = self.search(anilist_title[1])
         if anilist_title[0] != anilist_title[1]:
             try:
                 if f'Search Results {"D" if dub else "S"}ubbed' in search_results:
