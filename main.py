@@ -293,7 +293,7 @@ class Session:
         return resp
 
 
-main_url = "https://anitaku.so"
+main_url = "https://anitaku.pe"
 alternate_domains = ["https://gogoanime3.net/", "https://www9.gogoanimes.fi", ]
 recent_url = "https://ajax.gogocdn.net/ajax/page-recent-release.html?page={}&type={}"
 episodes_url = "https://ajax.gogocdn.net/ajax/load-list-episode?ep_start=0&ep_end=10000&id={}"
@@ -682,23 +682,21 @@ class Gogo:
             return response
 
         anilist_data: Any = fetch_anilist_data(method_value)["data"]["Media"]
-        anilist_title = [anilist_data['title']['romaji'], anilist_data['title']['english']]
+        anilist_title = [anilist_data['title']['english'], anilist_data['title']['romaji']]
         for x in [None, 'None']:
             if x in anilist_title:
                 anilist_title.remove(x)
         if len(anilist_title) == 1:
             anilist_title *= 2
         search_results = self.search(anilist_title[0])
+        search_results2  = self.search(anilist_title[1])
         if anilist_title[0] != anilist_title[1]:
-            try:
-                if f'Search Results {"D" if dub else "S"}ubbed' in search_results:
-                    search_results[f'Search Results {"D" if dub else "S"}ubbed'].extend(
-                        search_results2[f'Search Results {"D" if dub else "S"}ubbed'])
-                else:
-                    search_results = search_results2
-            except: 
-                pass
-           
+            if f'Search Results {"D" if dub else "S"}ubbed' in search_results:
+                search_results[f'Search Results {"D" if dub else "S"}ubbed'].extend(
+                    search_results2[f'Search Results {"D" if dub else "S"}ubbed'])
+            else:
+                search_results = search_results2
+                      
         for result in search_results[f'Search Results {"D" if dub else "S"}ubbed']:
             result: Any = result
             print(result)
