@@ -691,15 +691,12 @@ class Gogo:
         search_results = self.search(anilist_title[0])
         search_results2  = self.search(anilist_title[1])
         if anilist_title[0] != anilist_title[1]:
-            try:
-                if f'Search Results {"D" if dub else "S"}ubbed' in search_results:
-                    search_results[f'Search Results {"D" if dub else "S"}ubbed'].extend(
-                        search_results2[f'Search Results {"D" if dub else "S"}ubbed'])
-                else:
-                    search_results = search_results2
-            except: 
-                pass
-           
+            if f'Search Results {"D" if dub else "S"}ubbed' in search_results:
+                search_results[f'Search Results {"D" if dub else "S"}ubbed'].extend(
+                    search_results2[f'Search Results {"D" if dub else "S"}ubbed'])
+            else:
+                search_results = search_results2
+                      
         for result in search_results[f'Search Results {"D" if dub else "S"}ubbed']:
             result: Any = result
             print(result)
