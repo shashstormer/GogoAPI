@@ -682,7 +682,7 @@ class Gogo:
             return response
 
         anilist_data: Any = fetch_anilist_data(method_value)["data"]["Media"]
-        anilist_title = [anilist_data['title']['romaji'], anilist_data['title']['english']]
+        anilist_title = [anilist_data['title']['english'], anilist_data['title']['romaji']]
         for x in [None, 'None']:
             if x in anilist_title:
                 anilist_title.remove(x)
