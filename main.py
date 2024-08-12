@@ -392,7 +392,7 @@ class Gogo:
             dt, new = self.cache.get(url.replace(main_url, alternate_domains[0]))
         if new:
             results = self._cards(dt)
-            dt = {}
+            dt = {"Search Results Subbed": [], "Search Results Dubbed": []}
             if results[0]:
                 dt["Search Results Subbed"] = results[0]
             if results[1]:
@@ -696,7 +696,6 @@ class Gogo:
                     search_results2[f'Search Results {"D" if dub else "S"}ubbed'])
             else:
                 search_results = search_results2
-                      
         for result in search_results[f'Search Results {"D" if dub else "S"}ubbed']:
             result: Any = result
             print(result)
