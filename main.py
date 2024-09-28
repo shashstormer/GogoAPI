@@ -510,7 +510,7 @@ class Gogo:
 
     @staticmethod
     def docs(*__, **_):
-        return FileResponse("./server/routes/api/sites/gogo/docs.html")
+        return FileResponse("docs.html")
 
     def trending(self, *__, **_):
         url = trending_url.format(trending_id.get(_.get("timeline", "week"), 1))
