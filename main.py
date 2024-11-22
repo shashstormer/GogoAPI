@@ -293,7 +293,7 @@ class Session:
         return resp
 
 
-main_url = "https://anitaku.to"
+main_url = "https://anitaku.pe"
 alternate_domains = ["https://gogoanime3.net/", "https://www9.gogoanimes.fi", ]
 recent_url = "https://ajax.gogocdn.net/ajax/page-recent-release.html?page={}&type={}"
 episodes_url = "https://ajax.gogocdn.net/ajax/load-list-episode?ep_start=0&ep_end=10000&id={}"
@@ -400,7 +400,7 @@ class Gogo:
             dt, new = self.cache.get(url.replace(main_url, alternate_domains[0]))
         if new:
             results = self._cards(dt)
-            dt = {}
+            dt = {"Search Results Subbed": [], "Search Results Dubbed": []}
             if results[0]:
                 dt["Search Results Subbed"] = results[0]
             if results[1]:
@@ -460,7 +460,7 @@ class Gogo:
         if new:
             x = html(dt)
             url = [i['data-video'] for i in x.find_all(class_="anime_muti_link")[0].find_all("a") if
-                   "streaming.php" in i['data-video']][0]
+                   "embedplus" in i['data-video']][0]
             parsed_url = yarl.URL(url)
             content_id = parsed_url.query["id"]
             next_host = "https://{}/".format(parsed_url.host)
@@ -518,7 +518,7 @@ class Gogo:
 
     @staticmethod
     def docs(*__, **_):
-        return FileResponse("./server/routes/api/sites/gogo/docs.html")
+        return FileResponse("docs.html")
 
     def trending(self, *__, **_):
         url = trending_url.format(trending_id.get(_.get("timeline", "week"), 1))
@@ -675,17 +675,13 @@ class Gogo:
             url = 'https://graphql.anilist.co'
             query = f'''
                 query {{
-                    Page(perPage: 1) {{
-                        media(id:{anilist_id}) {{
+                        Media(id:{anilist_id}) {{
                             seasonYear
                             title{{
                                 english
                                 romaji
                             }}
-                            idMal
-                            season
                         }}
-                    }}
                 }}
             '''
 
@@ -693,26 +689,30 @@ class Gogo:
             response = load(self.session.get(url, post=True, body=data))
             return response
 
-        anilist_data: Any = fetch_anilist_data(method_value)["data"]["Page"]["media"][0]
-        anilist_title = [anilist_data['title']['romaji'], anilist_data['title']['english']]
+        anilist_data: Any = fetch_anilist_data(method_value)["data"]["Media"]
+        anilist_title = [anilist_data['title']['english'], anilist_data['title']['romaji']]
         for x in [None, 'None']:
             if x in anilist_title:
                 anilist_title.remove(x)
         if len(anilist_title) == 1:
             anilist_title *= 2
         search_results = self.search(anilist_title[0])
+        search_results2  = self.search(anilist_title[1])
         if anilist_title[0] != anilist_title[1]:
-            search_results2 = self.search(anilist_title[1])
-            search_results[f'Search Results {"D" if dub else "S"}ubbed'].extend(
-                search_results2[f'Search Results {"D" if dub else "S"}ubbed'])
+            if f'Search Results {"D" if dub else "S"}ubbed' in search_results:
+                search_results[f'Search Results {"D" if dub else "S"}ubbed'].extend(
+                    search_results2[f'Search Results {"D" if dub else "S"}ubbed'])
+            else:
+                search_results = search_results2
         for result in search_results[f'Search Results {"D" if dub else "S"}ubbed']:
             result: Any = result
+            print(result)
             for title in anilist_title:
+                
                 if result['title'] == "Bleach" and result['released_year'] == "2012":
                     result['released_year'] = "2004"
-                result['title'] = result['title'].replace("-", "").lower().replace(" (dub)", "")
-                title = title.replace("-", "").lower()
-                if result['title'] == title and str(result['released_year']) == str(anilist_data['seasonYear']):
+
+                if str(result['released_year']) == str(anilist_data['seasonYear'])  :
                     return {"slug": result['url']}
         return {"slug": False}
 
