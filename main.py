@@ -319,13 +319,15 @@ class Gogo:
         self.details = self.Details(self.session, self.cache, super_class=self)
 
     def home(self, *__, **_):
-        old = self.mini_cache[main_url]
+        pg = str(_.get("page", 1))
+        pg = pg if pg != "None" else "1"
+        old = self.mini_cache[main_url+pg]
         if not old and _.get("redirected_code", None) is None:
             dt = {}
             rtyp = recent_possibilities["type"]
             for typ in rtyp:
                 try:
-                    merge_data = self._cards(self.session.get(recent_url.format("1", typ)))
+                    merge_data = self._cards(self.session.get(recent_url.format(pg, typ)))
                 except Exception as e:
                     print(e)
                     return self.home(redirected_code="1")
@@ -378,6 +380,12 @@ class Gogo:
                 to_append["released_year"] = (
                     released_year.get_text().replace("Released:", "").replace("\n", "").replace("\t", "")
                     .strip(" "))
+            episodes_count = item.select_one("p[class='episode']")
+            if episodes_count:
+                to_append["episodes_count"] = (
+                    episodes_count.get_text().replace("Episode ", "").replace("\n", "").replace("\t", "")
+                    .strip()
+                )
             data[0 if typ == "SUB" else 1].append(to_append)
         return data
 
