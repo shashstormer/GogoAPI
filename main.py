@@ -293,7 +293,7 @@ class Session:
         return resp
 
 
-main_url = "https://anitaku.bz"
+main_url = "https://gogoanime3.cc/"
 alternate_domains = ["https://gogoanime3.net/", "https://www9.gogoanimes.fi", ]
 recent_url = "https://ajax.gogocdn.net/ajax/page-recent-release.html?page={}&type={}"
 episodes_url = "https://ajax.gogocdn.net/ajax/load-list-episode?ep_start=0&ep_end=10000&id={}"
